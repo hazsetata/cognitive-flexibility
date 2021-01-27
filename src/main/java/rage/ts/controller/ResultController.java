@@ -1,9 +1,12 @@
 package rage.ts.controller;
 
+import org.springframework.util.StringUtils;
+import rage.ts.callback.CallbackHandler;
 import rage.ts.service.ResultService;
 import rage.ts.domain.TestResult;
 import rage.ts.repository.ParticipantRepository;
 import rage.ts.service.AggregateResultService;
+import rage.ts.session.CallbackSessionTokenHolder;
 import rage.ts.vo.AggregateResultVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,6 +26,11 @@ public class ResultController {
     @Autowired
     private AggregateResultService aggregateResultService;
 
+    @Autowired
+    private CallbackSessionTokenHolder callbackSessionTokenHolder;
+    @Autowired
+    private CallbackHandler callbackHandler;
+
     @RequestMapping(method = RequestMethod.POST, value = "app/result", consumes = "application/json")
     @ResponseBody
     public AggregateResultVO postResult(@RequestBody TestResult result) {
@@ -37,6 +45,10 @@ public class ResultController {
         result.setParticipant(participantRepository.findByUsername(result.getParticipant().getUsername()));
 
         resultService.save(result);
+
+        if (StringUtils.hasText(callbackSessionTokenHolder.getSessionToken())) {
+            callbackHandler.notifyCallbackForSessionToken(callbackSessionTokenHolder.getSessionToken());
+        }
 
         return aggregateResultService.calculateResult(result);
     }

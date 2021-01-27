@@ -3,6 +3,8 @@ package rage.ts.controller;
 import java.util.Enumeration;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.util.StringUtils;
 import rage.ts.domain.AuthenticationInformation;
 import rage.ts.domain.Participant;
 import rage.ts.repository.AuthenticationInformationRepository;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import rage.ts.session.CallbackSessionTokenHolder;
 
 @Controller
 public class UserAuthenticationController {
@@ -32,6 +35,9 @@ public class UserAuthenticationController {
     @Autowired
     private AuthenticationInformationRepository authenticationInformationRepository;
 
+    @Autowired
+    private CallbackSessionTokenHolder callbackSessionTokenHolder;
+
     @RequestMapping(value = "app/whoami", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
     public Participant getDetails() {
@@ -40,17 +46,23 @@ public class UserAuthenticationController {
     }
 
     @RequestMapping(value = "app/auth/{username}", method = RequestMethod.GET)
-    public String login(@PathVariable String username, HttpServletRequest request) {
-        return auth(username, "", "", request);
+    public String login(
+            @PathVariable String username,
+            @RequestParam(value = "callbackToken", required = false) String callbackToken,
+            HttpServletRequest request
+    ) {
+        return auth(username, "", callbackToken, "", request);
     }
 
     @RequestMapping(value = "app/formauth", method = RequestMethod.POST)
     public String performFormAuth(
             @RequestParam(value = "username", required = true) String username,
             @RequestParam(value = "password", defaultValue = "", required = false) String password,
+            @RequestParam(value = "callbackToken", required = false) String callbackToken,
             @RequestParam(value = "metadata", defaultValue = "", required = false) String metadata,
-            HttpServletRequest request) {
-        return auth(username, password, metadata, request);
+            HttpServletRequest request
+    ) {
+        return auth(username, password,callbackToken, metadata, request);
     }
 
     private boolean authenticationSuccessful(String username, String password, String metadata, HttpServletRequest request) {
@@ -77,8 +89,11 @@ public class UserAuthenticationController {
         return false;
     }
 
-    private String auth(String username, String password, String metadata, HttpServletRequest request) {
+    private String auth(String username, String password, String callbackToken, String metadata, HttpServletRequest request) {
         if (authenticationSuccessful(username, password, metadata, request)) {
+            if (StringUtils.hasText(callbackToken)) {
+                callbackSessionTokenHolder.setSessionToken(callbackToken);
+            }
             return "redirect:/game.html";
         }
 
