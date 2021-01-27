@@ -1,0 +1,27 @@
+version: '2'
+
+volumes:
+    database_data:
+        driver: local
+
+services:
+    mysql:
+        build: ./docker/mysql-img/
+        expose:
+            - 3306
+        ports:
+            - 3306:3306
+        environment:
+            MYSQL_ROOT_PASSWORD: rootchangeme
+            MYSQL_DATABASE: cognitivedb
+            MYSQL_USER: cognitiveuser
+            MYSQL_PASSWORD: changeme
+        volumes:
+            - database_data:/var/lib/mysql
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin:latest
+        ports:
+            - 8090:80
+        environment:
+            PMA_HOST: mysql
+            PMA_PORT: 3306

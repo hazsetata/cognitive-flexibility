@@ -42,13 +42,13 @@ public class TSProfileDevelopment {
     @Bean
     public DataSource dataSource() {
         // assumes that you have a database called "mydatabase" in your mysql
-        String dbUrl = "jdbc:mysql://localhost:3306/mydatabase?zeroDateTimeBehavior=convertToNull";
+        String dbUrl = "jdbc:mysql://localhost:3306/cognitivedb?zeroDateTimeBehavior=convertToNull";
 
         BasicDataSource basicDataSource = new BasicDataSource();
-        basicDataSource.setDriverClassName("com.mysql.jdbc.Driver");
+        basicDataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
         basicDataSource.setUrl(dbUrl);
-        basicDataSource.setUsername("root");
-        basicDataSource.setPassword("");
+        basicDataSource.setUsername("cognitiveuser");
+        basicDataSource.setPassword("changeme");
 
         return basicDataSource;
     }

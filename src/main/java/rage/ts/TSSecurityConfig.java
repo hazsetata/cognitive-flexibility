@@ -24,8 +24,8 @@ public class TSSecurityConfig extends WebSecurityConfigurerAdapter {
         SecurityContextHolder.setStrategyName("MODE_INHERITABLETHREADLOCAL");
 
         http.userDetailsService(userDetailsService).authorizeRequests()
-                .antMatchers("/", "/index.html", "/static/**", "/app/login", "/app/auth*",
-                        "/app/form*", "/app/test", "/app/login").permitAll()
+                .antMatchers("/", "/index.html", "/static/**", "/app/login", "/app/auth/*",
+                        "/app/form*", "/app/test").permitAll()
                 .anyRequest().authenticated()
                 .and().rememberMe()
                 .and().csrf().disable();
