@@ -41,7 +41,7 @@ public class TSProfileDevelopment {
 
     @Bean
     public DataSource dataSource() {
-        // assumes that you have a database called "mydatabase" in your mysql
+        // assumes that you have a database called "cognitivedb" in your mysql
         String dbUrl = "jdbc:mysql://localhost:3306/cognitivedb?zeroDateTimeBehavior=convertToNull";
 
         BasicDataSource basicDataSource = new BasicDataSource();

@@ -1,5 +1,7 @@
 package rage.ts.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 import rage.ts.callback.CallbackHandler;
 import rage.ts.service.ResultService;
@@ -18,6 +20,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class ResultController {
+    private static final String CALLBACK_RESULT_INFO = "game";
+    private static final String CALLBACK_RESULT_TYPE = "TASKSWITCHING";
+
+    private static final Logger log = LoggerFactory.getLogger(ResultController.class);
 
     @Autowired
     private ParticipantRepository participantRepository;
@@ -47,7 +53,11 @@ public class ResultController {
         resultService.save(result);
 
         if (StringUtils.hasText(callbackSessionTokenHolder.getSessionToken())) {
-            callbackHandler.notifyCallbackForSessionToken(callbackSessionTokenHolder.getSessionToken());
+            if ((CALLBACK_RESULT_INFO.equalsIgnoreCase(result.getInfo().trim())) &&
+                    (CALLBACK_RESULT_TYPE.equalsIgnoreCase(result.getTestType().trim()))) {
+                log.debug("Final results arrived, notifying callback. Token: {}", callbackSessionTokenHolder.getSessionToken());
+                callbackHandler.notifyCallbackForSessionToken(callbackSessionTokenHolder.getSessionToken());
+            }
         }
 
         return aggregateResultService.calculateResult(result);

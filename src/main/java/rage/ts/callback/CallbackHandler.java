@@ -1,10 +1,12 @@
 package rage.ts.callback;
 
 import okhttp3.*;
+import okhttp3.logging.HttpLoggingInterceptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -12,6 +14,7 @@ import java.io.IOException;
 
 @Component
 public class CallbackHandler {
+    private static final String PRODUCTION_PROFILE_NAME = "production";
     private static final String CALLBACK_TOKEN_PLACEHOLDER = "{{callbackToken}}";
     private static final MediaType JSON_PAYLOAD = MediaType.get("application/json; charset=utf-8");
 
@@ -24,7 +27,8 @@ public class CallbackHandler {
     @Autowired
     public CallbackHandler(
             @Value("${callback.url:}") String callbackUrl,
-            @Value("${callback.payloadTemplate:}") String payloadTemplate) {
+            @Value("${callback.payloadTemplate:}") String payloadTemplate,
+            Environment springEnvironment) {
         client = null;
 
         if (!StringUtils.hasText(callbackUrl)) {
@@ -38,10 +42,36 @@ public class CallbackHandler {
             log.warn("Callback-handling will be disabled.");
         }
         else {
-            this.client = new OkHttpClient();
+            log.info("Callback handler configuration OK, initializing instance.");
+
+            if (isProductionEnvironment(springEnvironment)) {
+                this.client = new OkHttpClient();
+            }
+            else {
+                log.info("Non-production environment, activating HTTP-request logging.");
+                HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
+                loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+                this.client = new OkHttpClient.Builder().addInterceptor(loggingInterceptor).build();
+            }
+
             this.callbackUrl = callbackUrl;
             this.payloadTemplate = payloadTemplate;
         }
+    }
+
+    private boolean isProductionEnvironment(Environment springEnvironment) {
+        String[] activeProfiles = springEnvironment.getActiveProfiles();
+
+        if ((activeProfiles != null) && (activeProfiles.length > 0)) {
+            for (String profile : activeProfiles) {
+                if (profile.equalsIgnoreCase(PRODUCTION_PROFILE_NAME)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     @SuppressWarnings("UnusedReturnValue")
