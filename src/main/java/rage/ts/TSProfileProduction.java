@@ -57,7 +57,7 @@ public class TSProfileProduction {
         String dbUrl = "jdbc:mysql://" + databaseHost + ':' + databasePort + databasePath;
 
         BasicDataSource basicDataSource = new BasicDataSource();
-        basicDataSource.setDriverClassName("com.mysql.jdbc.Driver");
+        basicDataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
         basicDataSource.setUrl(dbUrl);
         basicDataSource.setUsername(databaseUsername);
         basicDataSource.setPassword(databasePassword);
