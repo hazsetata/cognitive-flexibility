@@ -8,6 +8,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.util.StringUtils;
 
 import javax.sql.DataSource;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 @Configuration
 public class DataSourceConfiguration {
@@ -20,16 +22,32 @@ public class DataSourceConfiguration {
     @Bean
     public DataSource dataSource() {
         DataSourceBuilder<?> dataSourceBuilder = DataSourceBuilder.create();
-        dataSourceBuilder.driverClassName("com.mysql.cj.jdbc.Driver");
+        dataSourceBuilder.driverClassName("org.mariadb.jdbc.Driver");
 
         String connectionUrl = getConnectionUrlFromEnvironment();
         if (!StringUtils.hasText(connectionUrl)) {
             // Connecting to local (test) database
             log.info("Database configuration URL not found in the environment, connecting to localhost.");
 
-            dataSourceBuilder.url("jdbc:mysql://localhost:3306/cognitivedb?zeroDateTimeBehavior=convertToNull");
+            dataSourceBuilder.url("jdbc:mariadb://localhost:3306/cognitivedb?zeroDateTimeBehavior=convertToNull");
             dataSourceBuilder.username("cognitiveuser");
             dataSourceBuilder.password("changeme");
+        }
+        else {
+            try {
+                URI jdbUri = new URI(connectionUrl);
+
+                String username = jdbUri.getUserInfo().split(":")[0];
+                String password = jdbUri.getUserInfo().split(":")[1];
+                String jdbUrl = "jdbc:mariadb://" + jdbUri.getHost() + ":" + jdbUri.getPort() + jdbUri.getPath() + "?zeroDateTimeBehavior=convertToNull";
+
+                dataSourceBuilder.url(jdbUrl);
+                dataSourceBuilder.username(username);
+                dataSourceBuilder.password(password);
+            }
+            catch (URISyntaxException e) {
+                throw new IllegalArgumentException("Database URL has wrong format.", e);
+            }
         }
 
         return dataSourceBuilder.build();

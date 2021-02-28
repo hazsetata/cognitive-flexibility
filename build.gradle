@@ -1,13 +1,13 @@
 plugins {
-	id 'org.springframework.boot' version '2.4.3'
-	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
-	id 'java'
+    id 'org.springframework.boot' version '2.4.3'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'java'
 }
 
 ext {
-	versionMajor = 2
-	versionMinor = 0
-	versionPoint = 0
+    versionMajor = 2
+    versionMinor = 0
+    versionPoint = 0
 }
 
 group = 'fi.ttl.cognitive'
@@ -15,52 +15,59 @@ version = computeVersion()
 sourceCompatibility = '11'
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 bootJar {
-	archiveBaseName = 'cognitive-test'
-	manifest {
-		attributes("Implementation-Title": "Cognitive Flexibility Test", "Implementation-Version": version)
-	}
+    archiveBaseName = 'cognitive-test'
+    manifest {
+        attributes("Implementation-Title": "Cognitive Flexibility Test", "Implementation-Version": version)
+    }
+    layered {
+        enabled = true
+    }
 }
 
 springBoot  {
-	buildInfo()
+    buildInfo()
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-actuator'
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-security'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'io.micrometer:micrometer-registry-prometheus'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'io.micrometer:micrometer-registry-prometheus'
 
-	runtimeOnly group: 'mysql', name: 'mysql-connector-java', version: '8.0.23'
+    implementation 'com.squareup.okhttp3:okhttp:4.9.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.9.0'
 
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'org.springframework.security:spring-security-test'
+    // We are using the MariaDB driver because it is LGPL, while the MySQL driver is GPL
+    runtimeOnly group: 'org.mariadb.jdbc', name: 'mariadb-java-client', version: '2.7.2'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
 }
 
 test {
-	useJUnitPlatform()
+    useJUnitPlatform()
 }
 
 def computeVersion() {
-	// Version format: <major>.<minor>.<point>.<build>
-	return String.format('%d.%d.%d.%s', versionMajor, versionMinor, versionPoint, getBuildNumber())
+    // Version format: <major>.<minor>.<point>.<build>
+    return String.format('%d.%d.%d.%s', versionMajor, versionMinor, versionPoint, getBuildNumber())
 }
 
 static def getBuildNumber() {
-	if (System.env.BUILD_NUMBER)
-		return System.env.BUILD_NUMBER
-	else if (System.env.BITBUCKET_BUILD_NUMBER)
-		return System.env.BITBUCKET_BUILD_NUMBER
-	else if (System.env.CI_PIPELINE_IID)
-		return System.env.CI_PIPELINE_IID
+    if (System.env.BUILD_NUMBER)
+        return System.env.BUILD_NUMBER
+    else if (System.env.BITBUCKET_BUILD_NUMBER)
+        return System.env.BITBUCKET_BUILD_NUMBER
+    else if (System.env.CI_PIPELINE_IID)
+        return System.env.CI_PIPELINE_IID
 
-	def proc = "git rev-parse --short HEAD".execute()
-	proc.waitFor()
+    def proc = "git rev-parse --short HEAD".execute()
+    proc.waitFor()
 
-	return "DEV-" + (proc.exitValue() ? "UNKNOWN" : proc.text.trim())
+    return (proc.exitValue() ? "UNKNOWN" : proc.text.trim())
 }
