@@ -1,6 +1,6 @@
 package fi.ttl.cognitive.cognitiveflexibilitytstest.controller;
 
-import fi.ttl.cognitive.cognitiveflexibilitytstest.callback.CallbackHandler;
+import fi.ttl.cognitive.cognitiveflexibilitytstest.service.CallbackHandlerService;
 import fi.ttl.cognitive.cognitiveflexibilitytstest.domain.TestResult;
 import fi.ttl.cognitive.cognitiveflexibilitytstest.repository.ParticipantRepository;
 import fi.ttl.cognitive.cognitiveflexibilitytstest.service.AggregateResultService;
@@ -35,7 +35,7 @@ public class ResultController {
     @Autowired
     private CallbackSessionTokenHolder callbackSessionTokenHolder;
     @Autowired
-    private CallbackHandler callbackHandler;
+    private CallbackHandlerService callbackHandler;
 
     @RequestMapping(method = RequestMethod.POST, value = "app/result", consumes = "application/json")
     @ResponseBody
@@ -51,6 +51,7 @@ public class ResultController {
         result.setParticipant(participantRepository.findByUsername(result.getParticipant().getUsername()));
 
         resultService.save(result);
+        AggregateResultVO retValue = aggregateResultService.calculateResult(result);
 
         if (StringUtils.hasText(callbackSessionTokenHolder.getSessionToken())) {
             if ((CALLBACK_RESULT_INFO.equalsIgnoreCase(result.getInfo().trim())) &&
@@ -60,6 +61,6 @@ public class ResultController {
             }
         }
 
-        return aggregateResultService.calculateResult(result);
+        return retValue;
     }
 }

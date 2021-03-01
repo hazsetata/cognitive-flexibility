@@ -1,34 +1,27 @@
-package fi.ttl.cognitive.cognitiveflexibilitytstest.callback;
+package fi.ttl.cognitive.cognitiveflexibilitytstest.service;
 
 import okhttp3.*;
 import okhttp3.logging.HttpLoggingInterceptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.env.Environment;
-import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.io.IOException;
 
-@Component
-public class CallbackHandler {
-    private static final String PRODUCTION_PROFILE_NAME = "production";
+public class CallbackHandlerService {
     private static final String CALLBACK_TOKEN_PLACEHOLDER = "{{callbackToken}}";
     private static final MediaType JSON_PAYLOAD = MediaType.get("application/json; charset=utf-8");
 
-    private static final Logger log = LoggerFactory.getLogger(CallbackHandler.class);
+    private static final Logger log = LoggerFactory.getLogger(CallbackHandlerService.class);
 
     private OkHttpClient client;
     private String callbackUrl;
     private String payloadTemplate;
 
-    @Autowired
-    public CallbackHandler(
-            @Value("${callback.url:}") String callbackUrl,
-            @Value("${callback.payloadTemplate:}") String payloadTemplate,
-            Environment springEnvironment) {
+    public CallbackHandlerService(
+            String callbackUrl,
+            String payloadTemplate,
+            boolean logHttpRequest) {
         client = null;
 
         if (!StringUtils.hasText(callbackUrl)) {
@@ -44,11 +37,11 @@ public class CallbackHandler {
         else {
             log.info("Callback handler configuration OK, initializing instance.");
 
-            if (isProductionEnvironment(springEnvironment)) {
+            if (!logHttpRequest) {
                 this.client = new OkHttpClient();
             }
             else {
-                log.info("Non-production environment, activating HTTP-request logging.");
+                log.info("Callback HTTP-request logging activated.");
                 HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
                 loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
@@ -58,20 +51,6 @@ public class CallbackHandler {
             this.callbackUrl = callbackUrl;
             this.payloadTemplate = payloadTemplate;
         }
-    }
-
-    private boolean isProductionEnvironment(Environment springEnvironment) {
-        String[] activeProfiles = springEnvironment.getActiveProfiles();
-
-        if ((activeProfiles != null) && (activeProfiles.length > 0)) {
-            for (String profile : activeProfiles) {
-                if (profile.equalsIgnoreCase(PRODUCTION_PROFILE_NAME)) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
     }
 
     @SuppressWarnings("UnusedReturnValue")
