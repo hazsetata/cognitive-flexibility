@@ -8,6 +8,7 @@ import fi.ttl.cognitive.cognitiveflexibilitytstest.domain.AuthenticationInformat
 import fi.ttl.cognitive.cognitiveflexibilitytstest.domain.Participant;
 import fi.ttl.cognitive.cognitiveflexibilitytstest.repository.AuthenticationInformationRepository;
 import fi.ttl.cognitive.cognitiveflexibilitytstest.repository.ParticipantRepository;
+import fi.ttl.cognitive.cognitiveflexibilitytstest.service.ClientIdGuardService;
 import fi.ttl.cognitive.cognitiveflexibilitytstest.session.CallbackSessionTokenHolder;
 import org.springframework.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,9 @@ public class UserAuthenticationController {
     @Autowired
     private CallbackSessionTokenHolder callbackSessionTokenHolder;
 
+    @Autowired
+    private ClientIdGuardService clientIdGuardService;
+
     @RequestMapping(value = "app/whoami", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
     public Participant getDetails() {
@@ -49,9 +53,10 @@ public class UserAuthenticationController {
     public String login(
             @PathVariable String username,
             @RequestParam(value = "callbackToken", required = false) String callbackToken,
+            @RequestParam(value = "clientId", required = false) String clientId,
             HttpServletRequest request
     ) {
-        return auth(username, "", callbackToken, "", request);
+        return auth(username, "", callbackToken, clientId, "", request);
     }
 
     @RequestMapping(value = "app/formauth", method = RequestMethod.POST)
@@ -59,10 +64,11 @@ public class UserAuthenticationController {
             @RequestParam(value = "username", required = true) String username,
             @RequestParam(value = "password", defaultValue = "", required = false) String password,
             @RequestParam(value = "callbackToken", required = false) String callbackToken,
+            @RequestParam(value = "clientId", required = false) String clientId,
             @RequestParam(value = "metadata", defaultValue = "", required = false) String metadata,
             HttpServletRequest request
     ) {
-        return auth(username, password,callbackToken, metadata, request);
+        return auth(username, password, callbackToken, clientId, metadata, request);
     }
 
     private boolean authenticationSuccessful(String username, String password, String metadata, HttpServletRequest request) {
@@ -89,12 +95,14 @@ public class UserAuthenticationController {
         return false;
     }
 
-    private String auth(String username, String password, String callbackToken, String metadata, HttpServletRequest request) {
-        if (authenticationSuccessful(username, password, metadata, request)) {
-            if (StringUtils.hasText(callbackToken)) {
-                callbackSessionTokenHolder.setSessionToken(callbackToken);
+    private String auth(String username, String password, String callbackToken, String clientId, String metadata, HttpServletRequest request) {
+        if (clientIdGuardService.requestAllowed(clientId)) {
+            if (authenticationSuccessful(username, password, metadata, request)) {
+                if (StringUtils.hasText(callbackToken)) {
+                    callbackSessionTokenHolder.setSessionToken(callbackToken);
+                }
+                return "redirect:/game.html";
             }
-            return "redirect:/game.html";
         }
 
         return "redirect:/index.html?error";
