@@ -18,7 +18,7 @@ public class ClientIdConfiguration {
             return new ClientIdGuardService(configurationProperties.getClientId().trim());
         }
         else {
-            log.warn("Required client-id for login is not specified (or empty text), client-id will not be necessary for succesful login.");
+            log.warn("Required client-id for login is not specified (or empty text), client-id will not be necessary for successful login.");
 
             return new ClientIdGuardService(null);
         }
