@@ -41,8 +41,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'io.micrometer:micrometer-registry-prometheus'
 
-    implementation 'com.squareup.okhttp3:okhttp:4.9.0'
-    implementation 'com.squareup.okhttp3:logging-interceptor:4.9.0'
+    implementation 'com.squareup.okhttp3:okhttp:4.9.1'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.9.1'
 
     // We are using the MariaDB driver because it is LGPL, while the MySQL driver is GPL
     runtimeOnly group: 'org.mariadb.jdbc', name: 'mariadb-java-client', version: '2.7.2'
@@ -52,6 +52,7 @@ dependencies {
     testImplementation 'org.testcontainers:testcontainers:1.15.2'
     testImplementation "org.testcontainers:junit-jupiter:1.15.2"
     testImplementation 'org.testcontainers:mariadb:1.15.2'
+    testImplementation group: 'com.squareup.okhttp3', name: 'mockwebserver', version: '4.9.1'
 }
 
 test {

@@ -1,9 +1,7 @@
 package fi.ttl.cognitive.cognitiveflexibilitytstest.config.properties;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
 
-@Component
 @ConfigurationProperties("ttl.cognitive.client")
 public class ClientIdConfigurationProperties {
     /**

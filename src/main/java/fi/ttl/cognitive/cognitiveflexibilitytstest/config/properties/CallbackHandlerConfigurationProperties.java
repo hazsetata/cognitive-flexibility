@@ -1,9 +1,7 @@
 package fi.ttl.cognitive.cognitiveflexibilitytstest.config.properties;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
 
-@Component
 @ConfigurationProperties("ttl.cognitive.callback")
 public class CallbackHandlerConfigurationProperties {
     /**
