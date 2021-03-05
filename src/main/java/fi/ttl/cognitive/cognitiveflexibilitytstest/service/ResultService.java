@@ -40,14 +40,18 @@ public class ResultService {
         result.setParticipant(p);
 
         List<AdditionalKeyPress> presses = new ArrayList<>();
-        for (AdditionalKeyPress additionalKeyPress : result.getAdditionalKeyPresses()) {
-            presses.add(additionalKeyPressRepository.save(additionalKeyPress));
+        if (result.getAdditionalKeyPresses() != null) {
+            for (AdditionalKeyPress additionalKeyPress : result.getAdditionalKeyPresses()) {
+                presses.add(additionalKeyPressRepository.save(additionalKeyPress));
+            }
         }
         result.setAdditionalKeyPresses(presses);
 
         List<Reaction> reactions = new ArrayList<>();
-        for (Reaction reaction : result.getReactions()) {
-            reactions.add(reactionRepository.save(reaction));
+        if (result.getReactions() != null) {
+            for (Reaction reaction : result.getReactions()) {
+                reactions.add(reactionRepository.save(reaction));
+            }
         }
         result.setReactions(reactions);
 

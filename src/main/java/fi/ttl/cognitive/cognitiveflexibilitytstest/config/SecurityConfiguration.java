@@ -1,6 +1,7 @@
 package fi.ttl.cognitive.cognitiveflexibilitytstest.config;
 
-import fi.ttl.cognitive.cognitiveflexibilitytstest.service.CustomUserDetailsService;
+import fi.ttl.cognitive.cognitiveflexibilitytstest.security.CustomUserDetailsService;
+import fi.ttl.cognitive.cognitiveflexibilitytstest.security.NoPasswordEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,6 +11,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
@@ -28,12 +30,17 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/manage/**").permitAll()
-                .antMatchers("/", "/index.html", "/static/**", "/app/login", "/app/auth/*", "/app/formauth").permitAll()
+                .antMatchers("/", "/index.html", "/game.html", "/static/**", "/app/login", "/app/auth/*", "/app/formauth").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .rememberMe()
                 .and()
                 .csrf().disable();
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new NoPasswordEncoder();
     }
 
     @Bean

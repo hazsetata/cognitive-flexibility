@@ -1,4 +1,4 @@
-package fi.ttl.cognitive.cognitiveflexibilitytstest.service;
+package fi.ttl.cognitive.cognitiveflexibilitytstest.security;
 
 import java.util.Arrays;
 import javax.servlet.ServletContext;

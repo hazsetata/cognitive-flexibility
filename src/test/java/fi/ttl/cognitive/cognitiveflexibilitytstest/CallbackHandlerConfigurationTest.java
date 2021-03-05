@@ -14,6 +14,7 @@ import org.springframework.boot.test.context.ConfigDataApplicationContextInitial
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -97,7 +98,7 @@ class CallbackHandlerConfigurationTest {
 
                 assertTrue(callbackHandlerService.notifyCallbackForSessionToken("token1234"));
 
-                RecordedRequest request = mockServer.takeRequest();
+                RecordedRequest request = mockServer.takeRequest(20, TimeUnit.SECONDS);
                 assertEquals("/callbackPath", request.getPath());
                 assertEquals("POST", request.getMethod());
                 assertEquals("{\"session\": \"token1234\"}", request.getBody().readUtf8());
@@ -129,7 +130,7 @@ class CallbackHandlerConfigurationTest {
 
                 assertTrue(callbackHandlerService.notifyCallbackForSessionToken("token1234"));
 
-                RecordedRequest request = mockServer.takeRequest();
+                RecordedRequest request = mockServer.takeRequest(20, TimeUnit.SECONDS);
                 assertEquals("/callbackPath", request.getPath());
                 assertEquals("POST", request.getMethod());
                 assertEquals("{\"thing\": {\"sub\" : \"token1234\"}}", request.getBody().readUtf8());

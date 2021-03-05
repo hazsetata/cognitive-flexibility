@@ -9,6 +9,8 @@ import fi.ttl.cognitive.cognitiveflexibilitytstest.session.CallbackSessionTokenH
 import fi.ttl.cognitive.cognitiveflexibilitytstest.vo.AggregateResultVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -39,28 +41,26 @@ public class ResultController {
 
     @RequestMapping(method = RequestMethod.POST, value = "app/result", consumes = "application/json")
     @ResponseBody
-    public AggregateResultVO postResult(@RequestBody TestResult result) {
-        if (SecurityContextHolder.getContext().getAuthentication() != null
-                && SecurityContextHolder.getContext().getAuthentication().isAuthenticated()) {
-            String username = SecurityContextHolder.getContext().getAuthentication().getName();
-            if (username != null) {
-                result.getParticipant().setUsername(username);
+    public ResponseEntity<AggregateResultVO> postResult(@RequestBody TestResult result) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        if (username != null) {
+            result.setParticipant(participantRepository.findByUsername(username));
+
+            resultService.save(result);
+            AggregateResultVO retValue = aggregateResultService.calculateResult(result);
+
+            if (StringUtils.hasText(callbackSessionTokenHolder.getSessionToken())) {
+                if ((CALLBACK_RESULT_INFO.equalsIgnoreCase(result.getInfo().trim())) &&
+                        (CALLBACK_RESULT_TYPE.equalsIgnoreCase(result.getTestType().trim()))) {
+                    log.debug("Final results arrived, notifying callback. Token: {}", callbackSessionTokenHolder.getSessionToken());
+                    callbackHandler.notifyCallbackForSessionToken(callbackSessionTokenHolder.getSessionToken());
+                }
             }
+
+            return new ResponseEntity<>(retValue, HttpStatus.OK);
         }
-
-        result.setParticipant(participantRepository.findByUsername(result.getParticipant().getUsername()));
-
-        resultService.save(result);
-        AggregateResultVO retValue = aggregateResultService.calculateResult(result);
-
-        if (StringUtils.hasText(callbackSessionTokenHolder.getSessionToken())) {
-            if ((CALLBACK_RESULT_INFO.equalsIgnoreCase(result.getInfo().trim())) &&
-                    (CALLBACK_RESULT_TYPE.equalsIgnoreCase(result.getTestType().trim()))) {
-                log.debug("Final results arrived, notifying callback. Token: {}", callbackSessionTokenHolder.getSessionToken());
-                callbackHandler.notifyCallbackForSessionToken(callbackSessionTokenHolder.getSessionToken());
-            }
+        else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-
-        return retValue;
     }
 }
