@@ -20,20 +20,8 @@ services:
             - database_data:/var/lib/mysql
     phpmyadmin:
         image: phpmyadmin/phpmyadmin:latest
-        depends_on:
-            -   mysql
         ports:
             - 8090:80
         environment:
             PMA_HOST: mysql
             PMA_PORT: 3306
-    cognitivetest:
-        build: .
-        depends_on:
-            -   mysql
-        ports:
-            - 8080:8080
-        environment:
-            JAWSDB_MARIA_URL: mysql://cognitiveuser:changeme@mysql:3306/cognitivedb
-            TTL_COGNITIVE_CLIENT_CLIENTID: testClientId
-            PORT: 8080

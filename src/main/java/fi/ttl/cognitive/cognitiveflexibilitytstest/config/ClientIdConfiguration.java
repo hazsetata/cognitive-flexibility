@@ -17,6 +17,8 @@ public class ClientIdConfiguration {
     @Bean
     public ClientIdGuardService guardService(ClientIdConfigurationProperties configurationProperties) {
         if (StringUtils.hasText(configurationProperties.getClientId())) {
+            log.info("Required client-id for login is specified, client-id will be necessary for successful login.");
+
             return new ClientIdGuardService(configurationProperties.getClientId().trim());
         }
         else {
