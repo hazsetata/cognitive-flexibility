@@ -1,3 +1,11 @@
+# First we unpack the layered JAR in a "builder" container
+FROM adoptopenjdk/openjdk11-openj9:jdk-11.0.10_9_openj9-0.24.0 as builder
+WORKDIR /cognitive
+COPY build/libs/cognitive-test-*.jar cognitive-flexibility-tstest.jar
+RUN java -Djarmode=layertools -jar cognitive-flexibility-tstest.jar extract
+
+# Next we build the final container, copying the unpacked JAR content from "builder"
+# This produces smaller update layers when the dependencies don't change, only the application code.
 FROM adoptopenjdk/openjdk11-openj9:jdk-11.0.10_9_openj9-0.24.0
 LABEL vendor="Finnish Institute of Occupational Health" maintainer="zsolt.homorodi@vtt.fi"
 
@@ -8,7 +16,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 WORKDIR /cognitive
 
 ENTRYPOINT ["/usr/bin/tini", "--"]
-CMD ["java", "-Djava.security.egd=file:/dev/./urandom", "-jar", "/cognitive/cognitive-flexibility-tstest.jar"]
+CMD ["java", "-Djava.security.egd=file:/dev/./urandom", "org.springframework.boot.loader.JarLauncher"]
 
 RUN addgroup --system ttlapp && adduser --system --ingroup ttlapp ttlapp
 
@@ -30,8 +38,11 @@ RUN apt-get update \
     && dpkg -i /tini/tini-amd64.deb \
     && rm -rf /var/lib/apt/lists/*
 
-COPY build/libs/cognitive-test-*.jar /cognitive/cognitive-flexibility-tstest.jar
+COPY --from=builder cognitive/dependencies/ ./
+COPY --from=builder cognitive/spring-boot-loader ./
+COPY --from=builder cognitive/snapshot-dependencies/ ./
+COPY --from=builder cognitive/application/ ./
 
 # Make app run as non-root
-RUN chown ttlapp:ttlapp /cognitive/*.jar
+RUN chown -R ttlapp:ttlapp /cognitive/
 USER ttlapp
