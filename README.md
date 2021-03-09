@@ -12,6 +12,8 @@ All the commands are to be run in the same directory where this file is
 
 ## Development / testing
 
+### Compiling and packaging the application
+
 The code requires Java (version >= 11.x). It can be built with:
 
 ```shell
@@ -72,7 +74,7 @@ you want to clean those up too, run:
 docker-compose -f ./docker-compose-dev.yml down -v --rmi all
 ```
 
-### Working with the full Docker Compose setup
+### Working with the normal Docker Compose setup
 
 This setup utilizes a Docker Compose setup that spins up MySQL,
 PhpMyAdmin and the application too. This setup is ideal when you want
@@ -113,6 +115,49 @@ you want to clean those up too, run:
 
 ```shell
 docker-compose down -v --rmi all
+```
+
+### Fully Dockerized build
+
+If you need to run the application in an environment where Java is not
+readily available, you can use the `Dockerfile.fullbuild` file to build
+the application's Docker container entirely using Docker.
+
+You can also use the `docker-compose-fullbuild.yml` to start a full stack
+described in the previous chapter:
+
+```shell
+docker-compose -f ./docker-compose-fullbuild.yml up
+```
+
+Once ready, the application is available at
+[http://localhost:8080/](http://localhost:8080/).
+You can also connect to the MySQL instance with your favourite
+client (e.g.: DataGrip) directly:
+
+| Parameter | Value |
+| --------- | ----- |
+| Host | localhost |
+| Port | 3306 |
+| Root password| rootchangeme |
+| DB user | cognitiveuser |
+| DB user's password | changeme |
+| Application DB | cognitivedb |
+
+Or use PhpMyAdmin instead of a local client (available at
+[http://localhost:8090/](http://localhost:8090/)).
+
+To stop Docker Compose, first press Ctrl+C in its terminal, then run:
+
+```shell
+docker-compose -f ./docker-compose-fullbuild.yml down
+```
+
+This keeps the built Docker images, and the MySQL database contents. If
+you want to clean those up too, run:
+
+```shell
+docker-compose down -f ./docker-compose-fullbuild.yml -v --rmi all
 ```
 
 ## Deployment configuration

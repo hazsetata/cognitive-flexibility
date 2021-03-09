@@ -1,0 +1,41 @@
+version: '2'
+
+volumes:
+    database_data:
+        driver: local
+
+services:
+    mysql:
+        build: ./docker/mysql-img/
+        expose:
+            - 3306
+        ports:
+            - 3306:3306
+        environment:
+            MYSQL_ROOT_PASSWORD: rootchangeme
+            MYSQL_DATABASE: cognitivedb
+            MYSQL_USER: cognitiveuser
+            MYSQL_PASSWORD: changeme
+        volumes:
+            - database_data:/var/lib/mysql
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin:latest
+        depends_on:
+            -   mysql
+        ports:
+            - 8090:80
+        environment:
+            PMA_HOST: mysql
+            PMA_PORT: 3306
+    cognitivetest:
+        build:
+            context: .
+            dockerfile: Dockerfile.fullbuild
+        depends_on:
+            -   mysql
+        ports:
+            - 8080:8080
+        environment:
+            JAWSDB_MARIA_URL: mysql://cognitiveuser:changeme@mysql:3306/cognitivedb
+            TTL_COGNITIVE_CLIENT_CLIENTID: testClientId
+            PORT: 8080
