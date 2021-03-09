@@ -8,7 +8,7 @@ RUN apt-get update \
 WORKDIR /appbuild
 ADD . /appbuild
 RUN chmod +x ./gradlew \
-    && ./gradlew clean build
+    && ./gradlew --no-daemon clean build
 
 WORKDIR /cognitive
 RUN mv /appbuild/build/libs/cognitive-test-*.jar cognitive-flexibility-tstest.jar \
@@ -49,8 +49,11 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder cognitive/dependencies/ ./
+RUN true
 COPY --from=builder cognitive/spring-boot-loader ./
+RUN true
 COPY --from=builder cognitive/snapshot-dependencies/ ./
+RUN true
 COPY --from=builder cognitive/application/ ./
 
 # Make app run as non-root
