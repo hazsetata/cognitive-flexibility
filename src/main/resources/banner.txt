@@ -1,0 +1,8 @@
+${AnsiColor.GREEN} _____             _ _   _            _____ _         _ _   _ _ _ _
+${AnsiColor.GREEN}|     |___ ___ ___|_| |_|_|_ _ ___   |   __| |___ _ _|_| |_|_| |_| |_ _ _
+${AnsiColor.GREEN}|   --| . | . |   | |  _| | | | -_|  |   __| | -_|_'_| | . | | | |  _| | |
+${AnsiColor.GREEN}|_____|___|_  |_|_|_|_| |_|\_/|___|  |__|  |_|___|_,_|_|___|_|_|_|_| |_  |
+${AnsiColor.GREEN}          |___|                                                      |___|
+
+${AnsiColor.BRIGHT_BLUE}==> Version ${application.version}
+${AnsiColor.BRIGHT_BLUE}==> Running on Spring Boot ${spring-boot.version} ${AnsiColor.DEFAULT}
