@@ -10,6 +10,16 @@
         <h1></h1>
 
         <div id="entry">
+        </div>
+
+        <div id="entry-info"></div><br/>
+
+        <div id="info"></div>
+
+        <script src="static/lib/jquery-1.9.1.min.js"></script>
+        <script src="static/scripts/taskswitching-utils.js"></script>
+
+        <script id="entry_EN" type="text/template">
             <div id="auth-form">
                 <form method="POST" action="app/formauth">
                     Please enter your participant ID and press Continue.<br/>
@@ -18,18 +28,39 @@
                     <input type="submit" value="Continue"/>
                 </form>
             </div>
-            <div id="entry-info"></div><br/>
+        </script>
 
-            <div id="info"></div>
-        </div>
+        <script id="entry_FI" type="text/template">
+            <div id="auth-form">
+                <form method="POST" action="app/formauth">
+                    Sy&ouml;t&auml; tutkimustunnuksesi jatkaaksesi.<br/>
+                    <input id="participant-id" name="username" />
+                    <input name="password" value="" type="hidden"/><br/>
+                    <input type="submit" value="Valmis"/>
+                </form>
+            </div>
+        </script>
 
-        <script src="static/lib/jquery-1.9.1.min.js"></script>
 
         <script>
             $(document).ready(function() {
-                var url = $(location).attr("href");
-                if (url.indexOf("error") !== -1) {
-                    $("#entry-info").html("Verify your username and try again.");
+                const urlParameters = $.parseUrlParameters();
+                const error = urlParameters['error'];
+
+                if (error) {
+                    if ($.getLanguageCode() === 'en'){
+                        $("#entry-info").html("Verify your username and try again.");
+                    }
+                    else {
+                        $("#entry-info").html("Tarkista tutkimustunnuksesi ja yrit&auml; uudelleen.");
+                    }
+                }
+
+                if ($.getLanguageCode() === 'en'){
+                    $("#entry").html($("#entry_EN").text());
+                }
+                else {
+                    $("#entry").html($("#entry_FI").text());
                 }
             });
         </script>

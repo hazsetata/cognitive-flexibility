@@ -72,10 +72,50 @@ ENGLISH_TEXTS_MOBILE = {
     TASKSWITCHING_END_TEXT: "Thank you for participating!"
 };
 
+FINNISH_TEXTS = {
+    REACTION_TEST_START_TEXT: "Reaktioaikatehtävä<br/><br/>Paina 'x' kun näet minkä tahansa numero-kirjainparin ruudulla. <br/><br/>Tee tehtävä NIIN NOPEASTI kuin pystyt.<br/><br/>Paina välilyöntiä jatkaaksesi.",
+    REACTION_TEST_END_TEXT: "Mainiota! Keskimääräinen reaktioaikasi on RT.",
+    NUMBERTASK_PRACTICE_START_TEXT: "NUMEROTEHTÄVÄN harjoitus: Tarkkaile yläriviä.<br/><br/>Jos numero on pariton, paina 'x'. Jos numero on parillinen, paina 'm'.<br/>Tee tehtävä niin NOPEASTI ja TARKASTI kuin pystyt.<br/><br/>Paina välilyöntiä aloittaaksesi harjoittelun.",
+    NUMBERTASK_PRACTICE_END_TEXT: "TODO: TEXT",
+    NUMBERTASK_PRACTICE_ATTEMPTS_LEFT: "Hyvä!<br/>Paina 'x' jatkaaksesi varsinaiseen tehtävään.<br/>Muista: Kun numero on pariton, paina 'x'. Kun numero on parillinen, paina 'm'.<br/><br/>Jos haluat vielä harjoitella ennen tehtävän suorittamista, paina välilyöntiä.",
+    NUMBERTASK_START_TEXT: "Muista: Kun numero on pariton, paina 'x'. Kun numero on parillinen, paina 'm'.<br/><br/>Paina välilyöntiä aloittaaksesi.",
+    NUMBERTASK_END_TEXT: "TODO: TEXT",
+    CHARACTERTASK_PRACTICE_START_TEXT: "KIRJAINTEHTÄVÄN harjoittelu: Tarkkaile alariviä.<br/><br/>Jos kirjain on konsonantti, paina 'x'. Jos kirjain on vokaali, paina 'm'.<br/>Tee tehtävä niin NOPEASTI ja TARKASTI kuin pystyt.<br/><br/>Paina välilyöntiä aloittaaksesi harjoittelun.",
+    CHARACTERTASK_PRACTICE_END_TEXT: "TODO: TEXT",
+    CHARACTERTASK_PRACTICE_ATTEMPTS_LEFT: "Hyvää työtä!<br/>Paina 'x' jatkaaksesi varsinaiseen tehtävään.<br/>Muista: Jos kirjain on konsonantti, paina 'x'. Jos kirjain on vokaali, paina 'm'.<br/><br/>Jos haluat vielä harjoitella ennen tehtävän suorittamista, paina välilyöntiä.",
+    CHARACTERTASK_START_TEXT: "Muista: Jos kirjain on konsonantti, paina 'x'. Jos kirjain on vokaali, paina 'm'.<br/><br/>Paina välilyöntiä aloittaaksesi.",
+    CHARACTERTASK_END_TEXT: "TODO: TEXT",
+    TASKSWITCHING_PRACTICE_START_TEXT: "Nyt tehdään numero- ja kirjaintehtävää samanaikaisesti: Huomioi sekä ylä- että alarivi.<br><br/>Saat ensin harjoitella.<br/><br/>Ylärivillä: Jos numero on pariton, paina 'x'. Jos numero on parillinen, paina 'm'.<br/>Alarivilla: Jos kirjain on konsonantti, paina 'x'. Jos kirjain on vokaali, paina 'm'.<br/><br/>Tee tehtävä niin NOPEASTI ja TARKASTI kuin pystyt.<br/><br/>Paina välilyöntiä aloittaaksesi harjoittelun.",
+    TASKSWITCHING_PRACTICE_END_TEXT: "TODO: TEXT",
+    TASKSWITCHING_PRACTICE_ATTEMPTS_LEFT: "Hienoa!<br/>Paina 'x' jatkaaksesi varsinaiseen tehtävään.<br/><br/>Muista:<br/>Ylärivillä: pariton = 'x', parillinen = 'm'.<br/>Alarivilla: konsonantti = 'x', vokaali = 'm'.<br><br/>Jos haluat vielä harjoitella ennen tehtävän suorittamista, paina välilyöntiä.",
+    TASKSWITCHING_START_TEXT: "Muista:<br/>Ylärivillä: pariton = 'x', parillinen = 'm'.<br/>Alarivilla: konsonantti = 'x', vokaali = 'm'.<br/><br/>Paina välilyöntiä aloittaaksesi.",
+    TASKSWITCHING_END_TEXT: "Kiitos osallistumisesta!"
+};
+
+FINNISH_TEXTS_MOBILE = {
+    REACTION_TEST_START_TEXT: "Reaktioaikatehtävä<br/><br/>Paina punaista painiketta kun näet minkä tahansa numero-kirjainparin ruudulla. <br/><br/>Tee tehtävä NIIN NOPEASTI kuin pystyt.<br/><br/>Paina mustaa painiketta jatkaaksesi.",
+    REACTION_TEST_END_TEXT: "Mainiota! Keskimääräinen reaktioaikasi on RT.",
+    NUMBERTASK_PRACTICE_START_TEXT: "NUMEROTEHTÄVÄN harjoitus: Tarkkaile yläriviä.<br/><br/>Jos numero on pariton, paina punaista painiketta. Jos numero on parillinen, paina vihreää painiketta.<br/>Tee tehtävä niin NOPEASTI ja TARKASTI kuin pystyt.<br/><br/>Paina mustaa painiketta aloittaaksesi harjoittelun.",
+    NUMBERTASK_PRACTICE_END_TEXT: "TODO: TEXT",
+    NUMBERTASK_PRACTICE_ATTEMPTS_LEFT: "Hyvä!<br/>Paina punaista painiketta jatkaaksesi varsinaiseen tehtävään.<br/>Muista: Kun numero on pariton, paina punaista painiketta. Kun numero on parillinen, paina vihreää painiketta.<br/><br/>Jos haluat vielä harjoitella ennen tehtävän suorittamista, paina mustaa painiketta.",
+    NUMBERTASK_START_TEXT: "Muista: Kun numero on pariton, paina punaista painiketta. Kun numero on parillinen, paina vihreää painiketta.<br/><br/>Paina mustaa painiketta aloittaaksesi.",
+    NUMBERTASK_END_TEXT: "TODO: TEXT",
+    CHARACTERTASK_PRACTICE_START_TEXT: "KIRJAINTEHTÄVÄN harjoittelu: Tarkkaile alariviä.<br/><br/>Jos kirjain on konsonantti, paina punaista painiketta. Jos kirjain on vokaali, paina vihreää painiketta.<br/>Tee tehtävä niin NOPEASTI ja TARKASTI kuin pystyt.<br/><br/>Paina mustaa painiketta aloittaaksesi harjoittelun.",
+    CHARACTERTASK_PRACTICE_END_TEXT: "TODO: TEXT",
+    CHARACTERTASK_PRACTICE_ATTEMPTS_LEFT: "Hyvää työtä!<br/>Paina mustaa painiketta jatkaaksesi varsinaiseen tehtävään.<br/>Muista: Jos kirjain on konsonantti, paina punaista painiketta. Jos kirjain on vokaali, paina vihreää painiketta.<br/><br/>Jos haluat vielä harjoitella ennen tehtävän suorittamista, paina mustaa painiketta.",
+    CHARACTERTASK_START_TEXT: "Muista: Jos kirjain on konsonantti, paina punaista painiketta. Jos kirjain on vokaali, paina vihreää painiketta.<br/><br/>Paina mustaa painiketta aloittaaksesi.",
+    CHARACTERTASK_END_TEXT: "TODO: TEXT",
+    TASKSWITCHING_PRACTICE_START_TEXT: "Nyt tehdään numero- ja kirjaintehtävää samanaikaisesti: Huomioi sekä ylä- että alarivi.<br><br/>Saat ensin harjoitella.<br/><br/>Ylärivillä: Jos numero on pariton, paina punaista painiketta. Jos numero on parillinen, paina vihreää painiketta.<br/>Alarivilla: Jos kirjain on konsonantti, paina punaista painiketta. Jos kirjain on vokaali, paina vihreää painiketta.<br/><br/>Tee tehtävä niin NOPEASTI ja TARKASTI kuin pystyt.<br/><br/>Paina mustaa painiketta aloittaaksesi harjoittelun.",
+    TASKSWITCHING_PRACTICE_END_TEXT: "TODO: TEXT",
+    TASKSWITCHING_PRACTICE_ATTEMPTS_LEFT: "Hienoa!<br/>Paina punaista painiketta jatkaaksesi varsinaiseen tehtävään.<br/><br/>Muista:<br/>Ylärivillä: pariton = punainen, parillinen = vihreä.<br/>Alarivilla: konsonantti = punainen, vokaali = vihreä.<br><br/>Jos haluat vielä harjoitella ennen tehtävän suorittamista, paina mustaa painiketta.",
+    TASKSWITCHING_START_TEXT: "Muista:<br/>Ylärivillä: pariton = punainen, parillinen = vihreä.<br/>Alarivilla: konsonantti = punainen, vokaali = vihreä.<br/><br/>Paina mustaa painiketta aloittaaksesi.",
+    TASKSWITCHING_END_TEXT: "Kiitos osallistumisesta!"
+};
+
 // set used text
-ts.texts = ENGLISH_TEXTS;
-if (location.pathname.indexOf("mobile") !== -1) {
-    ts.texts = ENGLISH_TEXTS_MOBILE;
+ts.texts = ($.isMobileMode()) ? FINNISH_TEXTS_MOBILE : FINNISH_TEXTS;
+if ($.getLanguageCode() === 'en') {
+    ts.texts = ($.isMobileMode()) ? ENGLISH_TEXTS_MOBILE : ENGLISH_TEXTS;
 }
 
 ts.pracelements = {
@@ -198,7 +238,6 @@ ts.pracelements = {
 };
 
 ts.config.loadPracticeTest = function(type, initialDescription, postText) {
-
     var elements;
     switch (type) {
         case "NUMBERREACTION":
@@ -226,10 +265,17 @@ ts.config.loadPracticeTest = function(type, initialDescription, postText) {
 };
 
 ts.config.loadTestSet = function(type, initialDescription, postText, dataUrl) {
-    $("#guide").html($("#moment-english").text());
-    $("#guide").show();
+    const guideElement = $("#guide")
 
-    var elements = null;
+    if ($.getLanguageCode() === 'en') {
+        guideElement.html($("#moment-english").text());
+    }
+    else {
+        guideElement.html($("#moment-finnish").text());
+    }
+    guideElement.show();
+
+    let elements = null;
     $.ajax({
         url: dataUrl,
         async: false,
@@ -239,8 +285,8 @@ ts.config.loadTestSet = function(type, initialDescription, postText, dataUrl) {
         dataType: "json"
     });
 
-    $("#guide").hide();
-    var test = new ts.fn.createTest(
+    guideElement.hide();
+    let test = new ts.fn.createTest(
             type,
             initialDescription,
             postText,

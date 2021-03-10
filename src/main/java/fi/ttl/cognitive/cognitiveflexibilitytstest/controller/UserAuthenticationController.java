@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class UserAuthenticationController {
@@ -54,9 +55,11 @@ public class UserAuthenticationController {
             @PathVariable String username,
             @RequestParam(value = "callbackToken", required = false) String callbackToken,
             @RequestParam(value = "clientId", required = false) String clientId,
+            @RequestParam(value = "lang", required = false) String language,
+            RedirectAttributes redirectAttributes,
             HttpServletRequest request
     ) {
-        return auth(username, "", callbackToken, clientId, "", request);
+        return auth(username, "", callbackToken, clientId, language,"", redirectAttributes, request);
     }
 
     @RequestMapping(value = "app/formauth", method = RequestMethod.POST)
@@ -65,10 +68,12 @@ public class UserAuthenticationController {
             @RequestParam(value = "password", defaultValue = "", required = false) String password,
             @RequestParam(value = "callbackToken", required = false) String callbackToken,
             @RequestParam(value = "clientId", required = false) String clientId,
+            @RequestParam(value = "lang", required = false) String language,
             @RequestParam(value = "metadata", defaultValue = "", required = false) String metadata,
+            RedirectAttributes redirectAttributes,
             HttpServletRequest request
     ) {
-        return auth(username, password, callbackToken, clientId, metadata, request);
+        return auth(username, password, callbackToken, clientId, language, metadata, redirectAttributes, request);
     }
 
     private boolean authenticationSuccessful(String username, String password, String metadata, HttpServletRequest request) {
@@ -89,13 +94,26 @@ public class UserAuthenticationController {
             SecurityContextHolder.getContext().setAuthentication(auth);
 
             return true;
-        } catch (BadCredentialsException ex) {
+        }
+        catch (BadCredentialsException ex) {
+            // We will simply return false below
         }
 
         return false;
     }
 
-    private String auth(String username, String password, String callbackToken, String clientId, String metadata, HttpServletRequest request) {
+    private String auth(String username,
+                        String password,
+                        String callbackToken,
+                        String clientId,
+                        String language,
+                        String metadata,
+                        RedirectAttributes redirectAttributes,
+                        HttpServletRequest request) {
+        if (StringUtils.hasText(language)) {
+            redirectAttributes.addAttribute("lang", language.trim());
+        }
+
         if (clientIdGuardService.requestAllowed(clientId)) {
             if (authenticationSuccessful(username, password, metadata, request)) {
                 if (StringUtils.hasText(callbackToken)) {
@@ -120,14 +138,10 @@ public class UserAuthenticationController {
 
     private String getDetails(HttpServletRequest request) {
         StringBuilder sb = new StringBuilder();
-        Enumeration headers = request.getHeaderNames();
-        while (headers.hasMoreElements()) {
-            Object objHeader = headers.nextElement();
-            if (!(objHeader instanceof String)) {
-                continue;
-            }
+        Enumeration<String> headers = request.getHeaderNames();
 
-            String header = (String) objHeader;
+        while (headers.hasMoreElements()) {
+            String header = headers.nextElement();
             String value = request.getHeader(header);
             sb.append(header.trim()).append("=").append(value).append("\n");
         }

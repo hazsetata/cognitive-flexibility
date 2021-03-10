@@ -29,6 +29,7 @@
         <div id="timingbox" style="display:none"></div>
 
         <script src="static/lib/jquery-1.9.1.min.js"></script>
+        <script src="static/scripts/taskswitching-utils.js"></script>
         <script src="static/scripts/taskswitching-core.js"></script>
         <script src="static/scripts/taskswitching-ui.js"></script>
         <script src="static/scripts/taskswitching-app.js"></script>
@@ -49,13 +50,29 @@
             }
 
             $(document).ready(function() {
-                if (location.pathname.indexOf("mobile") !== -1) {
-                    $("#entry").html($("#english-mobile-entry").text());
-                } else {
-                    $("#entry").html($("#english-entry").text());
+                if ($.getLanguageCode() === 'en'){
+                    // ENGLISH
+                    if ($.isMobileMode()) {
+                        $("#entry").html($("#english-mobile-entry").text());
+                    }
+                    else {
+                        $("#entry").html($("#english-entry").text());
+                    }
+
+                    $("#result").html($("#result-english").text());
+                }
+                else {
+                    // FINNISH
+                    if ($.isMobileMode()) {
+                        $("#entry").html($("#finnish-mobile-entry").text());
+                    }
+                    else {
+                        $("#entry").html($("#finnish-entry").text());
+                    }
+
+                    $("#result").html($("#result-finnish").text());
                 }
 
-                $("#result").html($("#result-english").text());
 
                 $.ajax({
                     url: 'app/whoami',
@@ -73,25 +90,27 @@
 
                 waitForSpace();
             });
-        </script>     
+        </script>
+
+        <!-- ENGLISH -->
         <script id="english-entry" type="text/template">
             <input type="hidden" id="participant-id"/>
 
             <div id="info" style="display:none;">
-            You are about to do four tasks, where the speed of performance is measured.<br/><br/>
-            Please read the instructions of each test carefully before you start.<br/><br/>
-            Press spacebar to start.
+                You are about to do four tasks, where the speed of performance is measured.<br/><br/>
+                Please read the instructions of each test carefully before you start.<br/><br/>
+                Press spacebar to start.
             </div>
         </script>
         <script id="english-mobile-entry" type="text/template">
             <input type="hidden" id="participant-id"/>
 
             <div id="info" style="display:none;">
-            You are about to do four tasks, where the speed of performance is measured.<br/><br/>
-            Please read the instructions of each test carefully before you start.<br/><br/>
-            Press black to start.
+                You are about to do four tasks, where the speed of performance is measured.<br/><br/>
+                Please read the instructions of each test carefully before you start.<br/><br/>
+                Press black to start.
             </div>
-        </script>   
+        </script>
         <script id="result-english" type="text/template">
             <p>Results from previous test:</p>
             <div>Hits: <span id="hitsPercentage"></span> %</div>
@@ -99,6 +118,34 @@
         </script>
         <script id="moment-english" type="text/template">
             One moment...
+        </script>
+
+        <!-- FINNISH -->
+        <script id="finnish-entry" type="text/template">
+            <input type="hidden" id="participant-id"/>
+
+            <div id="info" style="display:none;">
+                Suoritat seuraavaksi nelj&auml; teht&auml;v&auml;&auml; joissa mitataan suorituksen nopeutta.<br/><br/>
+                Lue jokaisen teht&auml;v&auml;n ohjeet huolellisesti ennen aloittamista.<br/><br/>
+                Paina v&auml;lilyönti&auml; aloittaaksesi.
+            </div>
+        </script>
+        <script id="finnish-mobile-entry" type="text/template">
+            <input type="hidden" id="participant-id"/>
+
+            <div id="info" style="display:none;">
+                Suoritat seuraavaksi nelj&auml; teht&auml;v&auml;&auml; joissa mitataan suorituksen nopeutta.<br/><br/>
+                Lue jokaisen teht&auml;v&auml;n ohjeet huolellisesti ennen aloittamista.<br/><br/>
+                Paina mustaa aloittaaksesi.
+            </div>
+        </script>
+        <script id="result-finnish" type="text/template">
+            <p>Edellisen teht&auml;v&auml;n tulokset:</p>
+            <div>Osumat: <span id="hitsPercentage"></span> %</div>
+            <div>Reaktioaika keskim&auml;&auml;rin: <span id="reactionTime"></span> ms</div>
+        </script>
+        <script id="moment-finnish" type="text/template">
+            Odota hetki...
         </script>
     </body>
 </html>

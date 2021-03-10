@@ -107,6 +107,47 @@ class AppLoginAndCallbackTest {
 	}
 
 	@Test
+	void loginAndCallbackWorks_withLanguage() throws InterruptedException {
+		SessionFilter sessionFilter = new SessionFilter();
+		Response response =
+				given()
+						.filters(new RequestLoggingFilter(), new ResponseLoggingFilter(), sessionFilter)
+						.baseUri("http://localhost")
+						.port(port)
+						.queryParam("callbackToken", "testToken1234")
+						.queryParam("clientId", "testClientId")
+						.queryParam("lang", "en")
+						.when()
+						.redirects().follow(false)
+						.get("app/auth/testuser");
+
+		assertEquals(302, response.statusCode());
+		assertNotNull(response.getHeader("Location"));
+		assertTrue(response.getHeader("Location").endsWith("/game.html?lang=en"));
+		assertTrue(response.getCookies().containsKey("JSESSIONID"));
+
+		mockServer.enqueue(new MockResponse());
+
+		response =
+				given()
+						.filters(new RequestLoggingFilter(), new ResponseLoggingFilter(), sessionFilter)
+						.baseUri("http://localhost")
+						.port(port)
+						.contentType("application/json")
+						.body("{\"testType\":\"TASKSWITCHING\",\"info\":\"game\"}")
+						.when()
+						.redirects().follow(false)
+						.post("app/result");
+
+		assertEquals(200, response.statusCode());
+
+		RecordedRequest request = mockServer.takeRequest(20, TimeUnit.SECONDS);
+		assertEquals("/callbackPath", request.getPath());
+		assertEquals("POST", request.getMethod());
+		assertEquals("{\"session\": \"testToken1234\"}", request.getBody().readUtf8());
+	}
+
+	@Test
 	void loginFailsWithBadClientId() {
 		SessionFilter sessionFilter = new SessionFilter();
 		Response response =
@@ -123,6 +164,30 @@ class AppLoginAndCallbackTest {
 		assertEquals(302, response.statusCode());
 		assertNotNull(response.getHeader("Location"));
 		assertTrue(response.getHeader("Location").endsWith("/index.html?error"));
+		assertFalse(response.getCookies().containsKey("JSESSIONID"));
+	}
+
+	@Test
+	void loginFailsWithBadClientId_withLanguage() {
+		SessionFilter sessionFilter = new SessionFilter();
+		Response response =
+				given()
+						.filters(new RequestLoggingFilter(), new ResponseLoggingFilter(), sessionFilter)
+						.baseUri("http://localhost")
+						.port(port)
+						.queryParam("callbackToken", "testToken1234")
+						.queryParam("clientId", "wrongClientId")
+						.queryParam("lang", "en")
+						.when()
+						.redirects().follow(false)
+						.get("app/auth/testuser");
+
+		assertEquals(302, response.statusCode());
+		assertNotNull(response.getHeader("Location"));
+		assertTrue(
+				response.getHeader("Location").endsWith("/index.html?error&lang=en") ||
+						response.getHeader("Location").endsWith("/index.html?lang=en&error")
+		);
 		assertFalse(response.getCookies().containsKey("JSESSIONID"));
 	}
 }
